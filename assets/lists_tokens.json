@@ -1,0 +1,13 @@
+[
+  {"type": "keyword", "value": "func"},
+  {"type": "keyword", "value": "print"},
+  {"type": "symbol", "value": "("},
+  {"type": "symbol", "value": ")"},
+  {"type": "symbol", "value": "{"},
+  {"type": "symbol", "value": "}"},
+  {"type": "symbol", "value": ";"},
+  {"type": "type", "value": "int"},
+  {"type": "type", "value": "float"},
+  {"type": "type", "value": "string"},
+  {"type": "operator", "value": "="}
+]
