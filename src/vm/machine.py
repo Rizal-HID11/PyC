@@ -135,8 +135,13 @@ class VM:
                 self.pc = arg - 1  # -1 because we increment after
             
             elif opcode == OpCode.JUMP_IF_FALSE:
-                if not self.stack.pop():
+                condition_value = self.stack.pop()
+                print(f"🐛 DEBUG JUMP_IF_FALSE: condition={condition_value}, target={arg}, current_pc={self.pc}")
+                if not condition_value:
+                    print(f"🐛 DEBUG: JUMPING to {arg}")
                     self.pc = arg - 1
+                else:
+                    print(f"🐛 DEBUG: NOT jumping, condition is True")
             
             elif opcode == OpCode.JUMP_IF_TRUE:
                 if self.stack.pop():

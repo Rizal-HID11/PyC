@@ -7,8 +7,8 @@ def tokenize(code: str) -> Iterator[Tuple[str, str, int]]:
         (r'\bfunc\b', 'FUNC'),
         (r'\breturn\b', 'RETURN'),
         (r'\bprint\b', 'PRINT'),
-        (r'\bif\b', 'IF'),          # ADD THIS!
-        (r'\belse\b', 'ELSE'),      # ADD THIS!
+        (r'\bif\b', 'IF'),          
+        (r'\belse\b', 'ELSE'),      
         (r'\b(int|float|string|bool)\b', 'TYPE'),
         (r'[a-zA-Z_]\w*', 'IDENT'),
         (r'\d+\.?\d*', 'NUMBER'),

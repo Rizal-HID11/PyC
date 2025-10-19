@@ -38,15 +38,19 @@ class Parser:
 
     def parse(self) -> AST:
         statements = []
-        
+
         while self.current_token:
             try:
+                print(f"🐛 DEBUG parse: current_token = {self.current_token}")
+
                 if self.current_token[0] == 'FUNC':
                     stmt = self.parse_function()
                 elif self.current_token[0] == 'PRINT':
                     stmt = self.parse_print()
                 elif self.current_token[0] == 'TYPE':
                     stmt = self.parse_var_decl()
+                elif self.current_token[0] == 'IF':
+                    stmt = self.parse_if()
                 elif self.current_token[0] == 'IDENT':
                     next_token = self.tokens[self.pos + 1] if self.pos + 1 < len(self.tokens) else None
                     if next_token and next_token[1] == '(':
@@ -58,13 +62,16 @@ class Parser:
                         continue
                 else:
                     self.eat()
-                    continue
-                
+                    continue 
+
                 if stmt:
                     statements.append(stmt)
+                    print(f"🐛 DEBUG parse: Added {stmt.type} to statements")
                     
             except Exception as e:
                 print(f"Parser error: {e}")
+                print(f"🐛 DEBUG parse: EXCEPTION: {e}")
+                print(f"🐛 DEBUG parse: current_token during exception = {self.current_token}")
                 # Skip to next potential statement
                 self.pos += 1
                 self.current_token = self.tokens[self.pos] if self.pos < len(self.tokens) else None
@@ -93,24 +100,75 @@ class Parser:
         
         return AST('Function', f"{name}:{return_type}" if return_type else name, body)
     
+    def parse_if(self) -> AST:
+        """Parse if/else statement"""
+        print(f"🐛 DEBUG parse_if: current_token = {self.current_token}")
+        self.eat('IF') # Consume 'if'
+        print(f"🐛 DEBUG parse_if: after eating IF, current_token = {self.current_token}")
+        self.eat("PUNCT", "(")
+        print(f"🐛 DEBUG parse_if: after eating '(', current_token = {self.current_token}")
+
+        # Parse condition
+        condition = self.parse_expression()
+        print(f"🐛 DEBUG parse_if: condition = {condition}")
+
+        self.eat('PUNCT', ')')
+        print(f"🐛 DEBUG parse_if: after eating ')', current_token = {self.current_token}")
+        self.eat('PUNCT', '{')
+        print(f"🐛 DEBUG parse_if: after eating '{{', current_token = {self.current_token}")
+
+        # Parse then branch (statements inside {})
+        then_statements = []
+        while self.current_token and self.current_token[1] != '}':
+            stmt = self.parse_statement()
+            if stmt:
+                then_statements.append(stmt)
+        self.eat('PUNCT', '}')
+        print(f"🐛 DEBUG parse_if: then_statements = {len(then_statements)} statements")
+
+        #Parse else branch
+        else_statements = []
+        if self.current_token and self.current_token[0] == 'ELSE':
+            self.eat('ELSE')
+            self.eat('PUNCT', '{')
+
+            while self.current_token and self.current_token[1] != '}':
+                stmt = self.parse_statement()
+                if stmt:
+                    else_statements.append(stmt)
+            self.eat('PUNCT', '}')
+
+            print(f"🐛 DEBUG parse_if: else_statements = {len(else_statements)} statements")
+        
+        #Create AST nodes for blocks
+        then_block = AST('Block', children=then_statements)
+        else_block = AST('Block', children=else_statements)
+
+        result =  AST('If', children=[condition, then_block, else_block])
+        print(f"🐛 DEBUG parse_if: returning {result}")
+        return result
+    
     def parse_statement(self) -> AST:
         if not self.current_token:
             return None
-            
+        
         if self.current_token[0] == 'PRINT':
             return self.parse_print()
         elif self.current_token[0] == 'TYPE':
             return self.parse_var_decl()
+        elif self.current_token[0] == 'IF':
+            print(f"🐛 DEBUG: Found IF token in parse_statement")
+            return self.parse_if()
+        elif self.current_token[0] == 'RETURN':
+            return self.parse_return()
         elif self.current_token[0] == 'IDENT':
             next_token = self.tokens[self.pos + 1] if self.pos + 1 < len(self.tokens) else None
             if next_token and next_token[1] == '(':
                 return self.parse_function_call()
             elif next_token and next_token[0] == 'ASSIGN':
                 return self.parse_assignment()
-        elif self.current_token[0] == 'RETURN':
-            return self.parse_return()
         
-        # Skip unknown
+        #Skip unknown
         self.eat()
         return None
     

@@ -181,12 +181,18 @@ class Compiler:
             const_idx = self.add_constant(value)
             self.emit(OpCode.LOAD_CONST, const_idx)
         elif expr.type == 'Variable':
-            if expr.value not in self.variables:
+            # Cek first if it's boolean literal
+            if expr.value == 'true':
+                self.emit(OpCode.LOAD_CONST, self.add_constant(True))
+            elif expr.value == 'false':
+                self.emit(OpCode.LOAD_CONST, self.add_constant(False))
+            elif expr.value not in self.variables:
                 raise Exception(f"Undefined variable: {expr.value}")
-            self.emit(OpCode.LOAD_VAR, self.variables[expr.value])
+            else:
+                self.emit(OpCode.LOAD_VAR, self.variables[expr.value])
         elif expr.type == 'BinaryOp':
             self.compile_binary_op(expr)
-        elif expr.type == 'Call':
+        elif expr.type == 'call':
             self.compile_call(expr)
     
     def compile_binary_op(self, expr):
