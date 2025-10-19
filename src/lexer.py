@@ -1,27 +1,25 @@
 # src/lexer.py
 import re
-from typing import List, Tuple
-from dataclasses import dataclass
+from typing import Iterator, Tuple
 
-@dataclass
-class Token:
-    type: str
-    value: str
-    line: int
-
-def tokenize(code: str) -> List[Token]:
+def tokenize(code: str) -> Iterator[Tuple[str, str, int]]:
     patterns = [
-        (r'\b(func|return|print|if|else|while)\b', 'KEYWORD'),
+        (r'\bfunc\b', 'FUNC'),
+        (r'\breturn\b', 'RETURN'),
+        (r'\bprint\b', 'PRINT'),
+        (r'\bif\b', 'IF'),          # ADD THIS!
+        (r'\belse\b', 'ELSE'),      # ADD THIS!
         (r'\b(int|float|string|bool)\b', 'TYPE'),
         (r'[a-zA-Z_]\w*', 'IDENT'),
         (r'\d+\.?\d*', 'NUMBER'),
         (r'"[^"]*"', 'STRING'),
-        (r'[+\-*/]=?|[=!]=?|[<>]=?', 'OP'),
+        (r'[+\-*/]', 'OP'),
+        (r'[=!]=|[<>]=?', 'COMPARE'),
+        (r'=', 'ASSIGN'),
         (r'[(){},;]', 'PUNCT'),
-        (r'\s+', None)
-    ]
+        (r'\s+', None),
+]
     
-    tokens = []
     line = 1
     pos = 0
     
@@ -30,11 +28,10 @@ def tokenize(code: str) -> List[Token]:
             if match := re.match(pattern, code[pos:]):
                 text = match.group()
                 if tag:
-                    tokens.append(Token(tag, text, line))
+                    yield (tag, text, line)
                 line += text.count('\n')
                 pos += len(text)
                 break
         else:
-            pos += 1  # Skip invalid chars
-    
-    return tokens
+            # Skip unknown characters instead of crashing
+            pos += 1

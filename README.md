@@ -75,14 +75,59 @@ func main() {
 **syntax = print, type = keyword**
 **purpose: to print a text to the output**
 
-**syntax = int, type = type**
-**purpose: to make a integer variabel**
+In this version, The PyC Language is not have much Syntax.
+He only can do:
+- **Define Variabel**
+- **Print To Output**
 
-**syntax = float, type = type**
-**purpose: to make a decimal number variabel**
+```json
+[
+  {"type": "keyword", "value": "func"},
+  {"type": "keyword", "value": "return"},
+  {"type": "keyword", "value": "print"},
+  {"type": "keyword", "value": "if"},
+  {"type": "keyword", "value": "else"},
+  {"type": "keyword", "value": "while"},
+  {"type": "keyword", "value": "class"},
+  {"type": "keyword", "value": "new"},
+  {"type": "keyword", "value": "this"},
+  {"type": "type", "value": "int"},
+  {"type": "type", "value": "float"},
+  {"type": "type", "value": "string"},
+  {"type": "type", "value": "bool"},
+  {"type": "symbol", "value": "("},
+  {"type": "symbol", "value": ")"},
+  {"type": "symbol", "value": "{"},
+  {"type": "symbol", "value": "}"},
+  {"type": "symbol", "value": "["},
+  {"type": "symbol", "value": "]"},
+  {"type": "symbol", "value": ";"},
+  {"type": "symbol", "value": ","},
+  {"type": "symbol", "value": "."},
+  {"type": "operator", "value": "="},
+  {"type": "operator", "value": "+"},
+  {"type": "operator", "value": "-"},
+  {"type": "operator", "value": "*"},
+  {"type": "operator", "value": "/"},
+  {"type": "operator", "value": "=="},
+  {"type": "operator", "value": "!="},
+  {"type": "operator", "value": ">"},
+  {"type": "operator", "value": "<"},
+  {"type": "operator", "value": ">="},
+  {"type": "operator", "value": "<="},
+  {"type": "operator", "value": "!"},
+  {"type": "boolean", "value": "true"},
+  {"type": "boolean", "value": "false"}
+]
+```
 
-**syntax string, type = type**
-**purpose: to make a text variabel**
+# Short Explain
+
+Syntax **func** is To define a function
+
+Syntax **print** is To print text to the output (print only text not string variabel it won't work)
+
+Syntax **int** is To define a integer variabel
 
 ---
 
@@ -95,14 +140,14 @@ pyc/
 │   ├── parser.py         # Syntax parser
 │   ├── compiler/         # Bytecode compiler
 │   │   └── bytecode.py
+│   │   └── semantic.py
 │   ├── vm/               # Virtual machine
 │   │   └── machine.py
+│   ├── helper/               # Helper Functions
+│   │   └── token_reader.py
 │   └── main.py           # Main compiler driver
 ├── examples/             # Example PyC programs
 │   ├── hello.pyc
-│   ├── calculator.pyc
-│   ├── classes.pyc
-│   └── loops.pyc
 └── assets/
     └── lists_tokens.json # Token definitions
 ```

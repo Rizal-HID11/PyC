@@ -1,4 +1,5 @@
 func main() {
-    string Message = "Hello, PyC!"
-    print(Message)
+    print("Hello, PyC!")
 }
+
+main()
