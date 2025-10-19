@@ -4,9 +4,7 @@ PyC is a compiled programming language that combines Python-like simplicity with
 This Language is still at Alpha Version it may not have complete syntax or complete systems.
 Each Update may change some syntax because this still Aplpha Version.
 
-# PyC Informations
-
-- **Versions:** 1.2.0.1
+**Current Versions: 0.9.0.0**
 
 # TODO
 
