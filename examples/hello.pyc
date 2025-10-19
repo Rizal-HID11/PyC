@@ -1,4 +1,4 @@
 func main() {
-    print "Hello, PyC!"
-    int number = 1
+    string Message = "Hello, PyC!"
+    print(Message)
 }

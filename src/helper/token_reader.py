@@ -1,15 +1,16 @@
-from parser import parse
-from runner import run
+# src/helper/token_reader.py
+import json
 import os
-from token_reader import read_token_defs
 
-
-def main():
-    root = os.getcwd()
-    pyc_file = os.path.join(root, "examples", "hello.pyc")
-    tokens = lex_file(pyc_file, [])
-    ast = parse(tokens)
-    run(ast)
-
-if __name__ == "__main__":
-    main()
+def read_token_defs():
+    """Read token definitions from JSON file"""
+    token_path = os.path.join(os.getcwd(), "assets", "lists_tokens.json")
+    try:
+        with open(token_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"❌ Token definitions not found: {token_path}")
+        return []
+    except json.JSONDecodeError:
+        print(f"❌ Invalid JSON in token definitions")
+        return []
