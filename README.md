@@ -1,5 +1,5 @@
 # PyC
-Zyra is a compiled programming language that combines Python-like simplicity with C-style block structure. Designed for ease of learning while maintaining high performance
+PyC is a compiled programming language that combines Python-like simplicity with C-style block structure. Designed for ease of learning while maintaining high performance
 
 This Language is still at Alpha Version it may not have complete syntax or complete systems.
 Each Update may change some syntax because this still Aplpha Version.
@@ -25,20 +25,37 @@ func main() {
 # Syntax Directory
 
 In this version, The PyC Language is not have much Syntax.
+He only can do:
+- **Define Variabel**
+- **Print To Output**
 
-**syntax = func, type = keyword**
-**purpose: to make a functions**
+```json
+{
+[
+  {"type": "keyword", "value": "func"},
+  {"type": "keyword", "value": "print"},
+  {"type": "symbol", "value": "("},
+  {"type": "symbol", "value": ")"},
+  {"type": "symbol", "value": "{"},
+  {"type": "symbol", "value": "}"},
+  {"type": "symbol", "value": ";"},
+  {"type": "type", "value": "int"},
+  {"type": "type", "value": "float"},
+  {"type": "type", "value": "string"},
+  {"type": "operator", "value": "="}
+]
+```
 
-**syntax = print, type = keyword**
-**purpose: to print a text to the output (it's still cannot print from a str variabel)**
+# Short Explain
 
-**syntax = int, type = type**
-**purpose: to make a integer variabel**
+Syntax **func** is To define a function
 
-**syntax = float, type = type**
-**purpose: to make a decimal number variabel**
+Syntax **print** is To print text to the output (print only text not string variabel it won't work)
 
-**syntax string, type = type**
-**purpose: to make a text variabel**
+Syntax **int** is To define a integer variabel
+
+Syntax **float** To define decimal number variabel
+
+Syntax **string** is To define a text variabel
 
 ---
