@@ -22,12 +22,13 @@ Here some Tutorial:
 
 # What's New?
 
-**The new is:**
+**The Difference/New in this Version is:**
 
-- **Calculations:** Now added Arithmetic Operator Syntax
+- **Calculations:** Now added Arithmetic Operator Syntax (like =>, =<, /)
 - **Flexibility:** Now you can print but called variabel for example "print(Message)"
 - **Variabel:** Now while making variabel can used for like number for math calculations
 - **Complete:** Now Variables types is now complete (bool,int,string,float)
+- **New Folder:** Added New Folder ``bin``
 
 ---
 
@@ -35,12 +36,12 @@ Here some Tutorial:
 
 **I will give a example code for some systems:**
 
-**Arithmetic Operations:**
+**Simple Arithmetic Operations:**
 ```pyc
 func main() {
-    float x = 12
-    float y = 14
-    float result = y+x
+    int x = 12
+    int y = 14
+    int result = y + x
     print(result)
 }
 ```
@@ -61,9 +62,9 @@ func main() {
 
 ```pyc
 func main() {
-    float x = 1
-    float y = 2
-    float result = x + y
+    int x = 1
+    int y = 2
+    int result = x + y
     print(result)
 }
 ```
@@ -71,17 +72,6 @@ func main() {
 ---
 
 # Syntax Directory
-
-**syntax = func, type = keyword**
-**purpose: to make a functions**
-
-**syntax = print, type = keyword**
-**purpose: to print a text to the output**
-
-In this version, The PyC Language is not have much Syntax.
-He only can do:
-- **Define Variabel**
-- **Print To Output**
 
 ```json
 [
@@ -124,13 +114,14 @@ He only can do:
 ]
 ```
 
+---
+
 # Short Explain
 
-Syntax **func** is To define a function
-
-Syntax **print** is To print text to the output (print only text not string variabel it won't work)
-
-Syntax **int** is To define a integer variabel
+## Syntax ``func`` is To define a function
+## Syntax ``print`` is To print text to the output (print only text not string variabel it won't work)
+## Syntax ``int`` is To define a integer variabel
+## Syntax  ``if`` is To define a if a action then what action should do 
 
 ---
 
