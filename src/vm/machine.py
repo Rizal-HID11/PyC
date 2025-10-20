@@ -105,30 +105,32 @@ class VM:
                     raise Exception("Division by zero!")
                 self.stack.append(a / b)
             
-            # Comparison operations
-            elif opcode == OpCode.EQ:
-                b, a = self.stack.pop(), self.stack.pop()
-                self.stack.append(a == b)
-            
-            elif opcode == OpCode.NEQ:
-                b, a = self.stack.pop(), self.stack.pop()
-                self.stack.append(a != b)
-            
+            # Comparison operations - FIXED ORDER
             elif opcode == OpCode.GT:
                 b, a = self.stack.pop(), self.stack.pop()
                 self.stack.append(a > b)
             
             elif opcode == OpCode.LT:
-                b, a = self.stack.pop(), self.stack.pop()
+                a, b = self.stack.pop(), self.stack.pop()
                 self.stack.append(a < b)
             
+            elif opcode == OpCode.EQ:
+                a, b = self.stack.pop(), self.stack.pop()
+                self.stack.append(a == b)
+
+            elif opcode == OpCode.NEQ:
+                a, b = self.stack.pop(), self.stack.pop()
+                self.stack.append(a != b)
+            
             elif opcode == OpCode.GTE:
-                b, a = self.stack.pop(), self.stack.pop()
+                a, b = self.stack.pop(), self.stack.pop()
                 self.stack.append(a >= b)
             
             elif opcode == OpCode.LTE:
-                b, a = self.stack.pop(), self.stack.pop()
+                print(f"DEBUG {opcode.name} arg={arg}, stack={self.stack}")
+                a, b = self.stack.pop(), self.stack.pop()
                 self.stack.append(a <= b)
+            
             
             # Control flow
             elif opcode == OpCode.JUMP:

@@ -21,6 +21,7 @@ def tokenize(code: str) -> Iterator[Tuple[str, str, int]]:
         (r'=', 'ASSIGN'),
         (r'[(){},;]', 'PUNCT'),
         (r'\s+', None),
+        (r'#.*', None),  # comments
 ]
     
     line = 1

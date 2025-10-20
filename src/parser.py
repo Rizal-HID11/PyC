@@ -69,6 +69,11 @@ class Parser:
             except Exception as e:
                 print(f"Parser error: {e}")
 
+                while self.current_token and self.current_token[1] not in [';', '}', '\n']:
+                    self.eat()
+                if self.current_token and self.current_token[1] == ';':
+                    self.eat()
+
                 # Skip to next potential statement
                 self.pos += 1
                 self.current_token = self.tokens[self.pos] if self.pos < len(self.tokens) else None
@@ -98,43 +103,44 @@ class Parser:
         return AST('Function', f"{name}:{return_type}" if return_type else name, body)
     
     def parse_if(self) -> AST:
-        """Parse if/else statement"""
-        self.eat('IF') # Consume 'if'
-        self.eat("PUNCT", "(")
+        self.eat('IF')
 
-        # Parse condition
-        condition = self.parse_expression()
+        # Handle both if(cond) and if cond
+        if self.current_token and self.current_token[1] == '(':
+            self.eat('PUNCT', '(')
+            condition = self.parse_expression()
+            self.eat('PUNCT', ')')
+        else:
+            condition = self.parse_expression() # No parentheses
 
-        self.eat('PUNCT', ')')
-        self.eat('PUNCT', '{')
-
-        # Parse then branch (statements inside {})
-        then_statements = []
-        while self.current_token and self.current_token[1] != '}':
-            stmt = self.parse_statement()
-            if stmt:
-                then_statements.append(stmt)
-        self.eat('PUNCT', '}')
-        print(f"🐛 DEBUG parse_if: then_statements = {len(then_statements)} statements")
-
-        #Parse else branch
-        else_statements = []
-        if self.current_token and self.current_token[0] == 'ELSE':
-            self.eat('ELSE')
+        if self.current_token and self.current_token[1] == '{':
             self.eat('PUNCT', '{')
+
+            then_statements = []
+            while self.current_token and self.current_token[1] != '}':
+                stmt = self.parse_statement()
+                if stmt:
+                    then_statements.append(stmt)
+
+        if self.current_token and self.current_token[1] == '}':
+            self.eat('PUNCT', '}')
+
+            else_statements = []
+            if self.current_token and self.current_token[1] == '{':
+                self.eat('PUNCT', '{')
 
             while self.current_token and self.current_token[1] != '}':
                 stmt = self.parse_statement()
                 if stmt:
                     else_statements.append(stmt)
-            self.eat('PUNCT', '}')
         
-        #Create AST nodes for blocks
+        if self.current_token and self.current_token[1] == '}':
+            self.eat('PUNCT', '}')
+
         then_block = AST('Block', children=then_statements)
         else_block = AST('Block', children=else_statements)
 
-        result =  AST('If', children=[condition, then_block, else_block])
-        return result
+        return AST('If', children=[condition, then_block, else_block])
     
     def parse_statement(self) -> AST:
         if not self.current_token:
@@ -257,7 +263,7 @@ class Parser:
         return AST('ArrayAccess', value=array_name, children=[index_expr])
     
     def parse_expression(self) -> AST:
-        
+        print(f"DEBUG parse_expression: start with {self.current_token}")
         # Handle array literals first
         if self.current_token and self.current_token[1] == '[':
             return self.parse_array_literal()

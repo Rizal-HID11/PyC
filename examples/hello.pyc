@@ -1,3 +1,4 @@
 func main() {
     print("Hello, PyC!")
+    print("This Languages Works Well!")
 }

@@ -3,7 +3,7 @@ PyC is a compiled programming language that combines Python-like simplicity with
 
 This Language is still at Alpha Version it may not have complete syntax or complete systems.
 
-**Current Versions: 0.9.1.1**
+**Current Versions: 0.9.1.2**
 
 # TODO
 
@@ -23,11 +23,8 @@ Here some Tutorial:
 
 **The Difference/New in this Version is:**
 
-- **Calculations:** Now added Arithmetic Operator Syntax (like =>, =<, /)
-- **Flexibility:** Now you can print but called variabel for example "print(Message)"
-- **Variabel:** Now while making variabel can used for like number for math calculations
-- **Complete:** Now Variables types is now complete (bool,int,string,float)
-- **New Folder:** Added New Folder ``bin``
+- **Syntax Issues Fixed:** The error in ``else`` Syntax of do not want to comparings
+- **Comments:** No you can type ``Messages/Comments`` in your code with type ``# Your Comments``
 
 ---
 
