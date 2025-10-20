@@ -24,7 +24,7 @@ Here some Tutorial:
 **The Difference/New in this Version is:**
 
 - **Syntax Issues Fixed:** The error in ``else`` Syntax of do not want to comparings
-- **Comments:** No you can type ``Messages/Comments`` in your code with type ``# Your Comments``
+- **Comments:** Now you can type ``Messages/Comments`` in your code with type ``# Your Comments``
 
 ---
 
@@ -77,9 +77,6 @@ func main() {
   {"type": "keyword", "value": "if"},
   {"type": "keyword", "value": "else"},
   {"type": "keyword", "value": "while"},
-  {"type": "keyword", "value": "class"},
-  {"type": "keyword", "value": "new"},
-  {"type": "keyword", "value": "this"},
   {"type": "type", "value": "int"},
   {"type": "type", "value": "float"},
   {"type": "type", "value": "string"},
