@@ -52,14 +52,14 @@ class VM:
             pos += 5
             self.code.append((opcode, operand))
         
-        print(f"✅ VM loaded: {len(self.constants)} constants, {len(self.code)} instructions")
+        print(f"VM loaded: {len(self.constants)} constants, {len(self.code)} instructions")
     
     def run(self):
         self.pc = 0
         self.stack = []
         self.call_stack = []
         
-        print("🚀 VM Execution Started")
+        print("VM Execution Started")
         
         try:
             while self.pc < len(self.code):
@@ -67,10 +67,10 @@ class VM:
                 self.execute(OpCode(op), arg)
                 self.pc += 1
         except Exception as e:
-            print(f"❌ VM Error at instruction {self.pc}: {e}")
+            print(f"VM Error at instruction {self.pc}: {e}")
             raise
         
-        print("✅ VM Execution Finished")
+        print("VM Execution Finished")
     
     def execute(self, opcode: OpCode, arg: int):
         try:
@@ -136,12 +136,10 @@ class VM:
             
             elif opcode == OpCode.JUMP_IF_FALSE:
                 condition_value = self.stack.pop()
-                print(f"🐛 DEBUG JUMP_IF_FALSE: condition={condition_value}, target={arg}, current_pc={self.pc}")
                 if not condition_value:
-                    print(f"🐛 DEBUG: JUMPING to {arg}")
                     self.pc = arg - 1
                 else:
-                    print(f"🐛 DEBUG: NOT jumping, condition is True")
+                    print(f"DEBUG: NOT jumping, condition is True")
             
             elif opcode == OpCode.JUMP_IF_TRUE:
                 if self.stack.pop():
@@ -157,10 +155,37 @@ class VM:
                 else:
                     self.pc = len(self.code)
             
+            # Arrays
+            elif opcode == OpCode.CREATE_ARRAY:
+                size = arg
+                array = []
+                for _ in range(size):
+                    array.append(self.stack.pop())
+                array.reverse()
+                self.stack.append(array)
+
+            elif opcode == OpCode.LOAD_ARRAY:
+                index = self.stack.pop()
+                array = self.stack.pop()
+                self.stack.append(array[index])
+
+            elif opcode == OpCode.STORE_ARRAY:
+                value = self.stack.pop()
+                index = self.stack.pop()
+                array = self.stack.pop()
+                array[index] = value
+                self.stack.append(value)
+            
             # Built-ins
             elif opcode == OpCode.PRINT:
                 value = self.stack.pop()
-                print(value)
+                if isinstance(value, bool):
+                    print("true" if value else "false", end=" ") # Print boolean as string
+                else:
+                    print(value, end=" ")
+            
+            elif opcode == OpCode.PRINT_END:
+                print() # Newline after complete all arguments
             
             elif opcode == OpCode.HALT:
                 self.pc = len(self.code)

@@ -9,6 +9,7 @@ class OpCode(Enum):
     LOAD_VAR = 2
     STORE_VAR = 3
     POP = 4
+    PRINT_END = 41
     
     # Arithmetic operations
     ADD = 10
@@ -30,6 +31,12 @@ class OpCode(Enum):
     JUMP_IF_TRUE = 32
     CALL = 33
     RETURN = 34
+
+    # Array operations
+    CREATE_ARRAY = 50    
+    LOAD_ARRAY = 51      
+    STORE_ARRAY = 52     
+    ARRAY_LEN = 53       
     
     # Built-ins
     PRINT = 40
@@ -47,14 +54,14 @@ class Compiler:
         self.label_counter = 0
     
     def compile(self, ast) -> bytes:
-        print("🔧 Compilation Started")
+        print("Compilation Started")
         
         # Find all functions first
         for stmt in ast.children:
             if stmt.type == 'Function':
                 func_name = stmt.value.split(':')[0] if ':' in stmt.value else stmt.value
                 self.functions[func_name] = len(self.code)
-                print(f"📍 Function '{func_name}' at position {len(self.code)}")
+                print(f"Function '{func_name}' at position {len(self.code)}")
         
         # Compile all statements
         for stmt in ast.children:
@@ -67,7 +74,7 @@ class Compiler:
         if not self.code or self.code[-1][0] != OpCode.HALT.value:
             self.emit(OpCode.HALT)
         
-        print(f"✅ Compilation Complete: {len(self.code)} instructions")
+        print(f"Compilation Complete: {len(self.code)} instructions")
         return self.serialize()
     
     def compile_statement(self, stmt):
@@ -83,6 +90,8 @@ class Compiler:
             self.compile_call(stmt)
         elif stmt.type == 'If':
             self.compile_if(stmt)
+        elif stmt.type == 'ArrayAssign':
+            self.compile_array_assign(stmt)
         elif stmt.type == 'ExprStmt':
             expr = stmt.children[0]
             if expr.type == 'Call':
@@ -115,8 +124,10 @@ class Compiler:
         self.variables = old_vars
     
     def compile_print(self, stmt):
-        self.compile_expression(stmt.children[0])
-        self.emit(OpCode.PRINT)
+        for arg in stmt.children:
+            self.compile_expression(arg)
+            self.emit(OpCode.PRINT)
+        self.emit(OpCode.PRINT_END)
     
     def compile_var_decl(self, stmt):
         var_name = stmt.value.split(':')[0]
@@ -194,6 +205,46 @@ class Compiler:
             self.compile_binary_op(expr)
         elif expr.type == 'call':
             self.compile_call(expr)
+        elif expr.type == 'ArrayLiteral':
+            self.compile_array_literal(expr)
+        elif expr.type == 'ArrayAccess':
+            self.compile_array_access(expr)
+    
+    def compile_array_literal(self, expr):
+        """Compile [1, 2, 3] to CREATE_ARRAY"""
+        # Compile all elements to stack
+        for element in expr.children:
+            self.compile_expression(element)
+        
+        # CREATE_ARRAY with amount elements
+        self.emit(OpCode.CREATE_ARRAY, len(expr.children))
+    
+    def compile_array_access(self, expr):
+        """Compile arr[index] to LOAD_ARRAY"""
+        #expr.value = array_name, expr.children[0] = index
+
+        # Load array var
+        if expr.value not in self.variables:
+            raise Exception(f"Undefined array {expr.value}")
+        self.emit(OpCode.LOAD_VAR, self.variables[expr.value])
+
+        # Load index expression
+        self.compile_expression(expr.children[0]) # index
+
+        self.emit(OpCode.LOAD_ARRAY)
+
+    def compile_array_assign(self, expr):
+        """Compile arr[index] = value to STORE_ARRAY"""
+        #arr[index] = value => compile array, index, value, STORE_ARRAY
+        array_access = expr.children[0] # AST ArrayAccess
+        value_expr = expr.children[1] # value expression
+
+        # Compile: array, index, value
+        self.compile_expression(array_access.children[0])
+        self.compile_expression(array_access.children[1])
+        self.compile_expression(value_expr)
+
+        self.emit(OpCode.STORE_ARRAY)
     
     def compile_binary_op(self, expr):
         # Compile left and right operands
